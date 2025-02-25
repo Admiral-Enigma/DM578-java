@@ -4,60 +4,61 @@ public class MergeSort {
         int nL = q - p + 1;
         int nR = r - q;
 
-        int[] L = new int[nL - 1];
-        int[] R = new int[nR - 1];
+        // Create arrays of the correct size
+        int[] L = new int[nL];
+        int[] R = new int[nR];
 
-        for (int i = 0; i < nL -1; i++) {
-            L[i] = A[p+i];
+        // Fill the arrays completely
+        for (int i = 0; i < nL; i++) {
+            L[i] = A[p + i];
         }
 
-        for (int j = 0; j < nR -1; j++) {
-            R[j] = A[q+j+1];
+        for (int j = 0; j < nR; j++) {
+            R[j] = A[q + j + 1];
         }
-
 
         int i = 0; // Indexes the smallest remaining element in L
         int j = 0; // Indexes the smallest remaining element in R
         int k = p; // k indexes the location in A to fill
 
+        // Merge the arrays back into A
         while (i < nL && j < nR) {
             if (L[i] <= R[j]) {
                 A[k] = L[i];
-                i += 1;
-            } else if (A[k] == R[j]) {
-               j += 1;
+                i++;
+            } else {
+                A[k] = R[j];
+                j++;
             }
-            k += 1;
+            k++;
         }
 
+        // Copy any remaining elements from L
         while (i < nL) {
             A[k] = L[i];
-            i +=1;
-            k +=1;
+            i++;
+            k++;
         }
 
+        // Copy any remaining elements from R
         while (j < nR) {
             A[k] = R[j];
-            j +=1;
-            k +=1;
+            j++;
+            k++;
         }
 
         return A;
     }
 
-
     public int[] mergeSort(int[] A, int p, int r) {
-        if (p >= r) {
-            return A;
+        if (p < r) {
+            int q = (p + r) / 2; // Math.floor not needed for integer division
+
+            mergeSort(A, p, q);
+            mergeSort(A, q + 1, r);
+            merge(A, p, q, r);
         }
 
-        int q = (int) Math.floor((p + r) / 2);
-
-        mergeSort(A, p, q);
-        mergeSort(A, q+ 1, r);
-
-
-
-        return merge(A, p, q, r);
+        return A;
     }
 }
