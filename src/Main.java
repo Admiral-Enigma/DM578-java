@@ -1,3 +1,5 @@
+import examples.MergeSortArrayList;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -44,8 +46,54 @@ public class Main {
 
 
 
-        System.out.println("Unsorted average: " + unsortedSum / unsortedTimes.size());
-        System.out.println("Sorted average: " + sortedSum / sortedTimes.size());
+        System.out.println("Array based unsorted average: " + unsortedSum / unsortedTimes.size());
+        System.out.println("Array based Sorted average: " + sortedSum / sortedTimes.size());
+
+
+        ArrayList<Long> sortedTimesArrayList = new ArrayList<Long>();
+        ArrayList<Long> unsortedTimesArrayList = new ArrayList<Long>();
+
+        for (int i = 0; i < iterations; i++) {
+            int[] randomArray = randomArray(arraySize);
+
+            ArrayList<Integer> testArray = new ArrayList<>();
+
+            for (int element : randomArray) {
+                testArray.add(element);
+            }
+
+            ArrayList<Integer> testArraySorted = new ArrayList<>(testArray);
+            testArraySorted.sort(null);
+
+
+            long startSorted = System.currentTimeMillis();
+            MergeSortArrayList.merge_sort(testArraySorted, 0, testArraySorted.size() -1);
+            long stopSorted = System.currentTimeMillis();
+            sortedTimesArrayList.add(stopSorted - startSorted);
+
+
+            long startUnsorted = System.currentTimeMillis();
+            MergeSortArrayList.merge_sort(testArray, 0, testArray.size() -1);
+            long stopUnsorted = System.currentTimeMillis();
+            unsortedTimesArrayList.add(stopUnsorted - startUnsorted);
+
+        }
+
+
+        long unsortedSumArraylist = 0;
+        long sortedSumArraylist = 0;
+
+        for (Long time : unsortedTimesArrayList) {
+            unsortedSumArraylist += time;
+        }
+
+        for (Long time : sortedTimesArrayList) {
+            sortedSumArraylist += time;
+        }
+
+
+        System.out.println("ArrayList based unsorted average: " + unsortedSumArraylist / unsortedTimesArrayList.size());
+        System.out.println("ArrayList based Sorted average: " + sortedSumArraylist / sortedTimesArrayList.size());
 
     }
     
