@@ -61,12 +61,12 @@ public class Benchmark {
 
 
             // Maybe wrong to do idk? Makes it easier to compare the constants across different N's
-            String unsortedConstant = String.format("%.6f", (unsortedAvgMs / nLogN) * 1000);
-            String sortedConstant = String.format("%.6f", (sortedAvgMs / nLogN) * 1000);
-            String reverseSortedConstant = String.format("%.6f", (reversedAvgMs / nLogN) * 1000);
+            String unsortedConstant = String.format("%.6f", (unsortedAvgMs / nLogN));
+            String sortedConstant = String.format("%.6f", (sortedAvgMs / nLogN));
+            String reverseSortedConstant = String.format("%.6f", (reversedAvgMs / nLogN));
 
             System.out.println("n*log2(n) = " + nLogN);
-            System.out.println("Constants (time in ms divided by n*log2(n) * 1000 then rounded to 6 digits for readability):");
+            System.out.println("Constants (time in ms divided by n*log2(n) then rounded to 6 digits for readability):");
             System.out.println("  Unsorted array constant: " + unsortedConstant);
             System.out.println("  Sorted array constant: " + sortedConstant);
             System.out.println("  Reversed array constant: " + reverseSortedConstant);
