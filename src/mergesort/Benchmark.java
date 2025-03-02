@@ -10,7 +10,7 @@ public class Benchmark {
         MergeSort sorter = new MergeSort();
 
         int iterations = 3;
-        int[] testN = {10000, 100000, 1000000, 10000000, 50000000};
+        int[] testN = {450000, 900000, 1900000, 10000000, 50000000};
 
         System.out.println("Array sizes: " + Arrays.toString(testN));
         System.out.println("Iterations per size: " + iterations);
@@ -59,11 +59,17 @@ public class Benchmark {
 
             double nLogN = n * log2(n);
 
+
+            // Maybe wrong to do idk? Makes it easier to compare the constants across different N's
+            String unsortedConstant = String.format("%.6f", (unsortedAvgMs / nLogN) * 1000);
+            String sortedConstant = String.format("%.6f", (sortedAvgMs / nLogN) * 1000);
+            String reverseSortedConstant = String.format("%.6f", (reversedAvgMs / nLogN) * 1000);
+
             System.out.println("n*log2(n) = " + nLogN);
-            System.out.println("Constants (time in ms divided by n*log2(n)):");
-            System.out.println("  Unsorted array constant: " + (unsortedAvgMs / nLogN));
-            System.out.println("  Sorted array constant: " + (sortedAvgMs / nLogN));
-            System.out.println("  Reversed array constant: " + (reversedAvgMs / nLogN));
+            System.out.println("Constants (time in ms divided by n*log2(n) * 1000 then rounded to 6 digits for readability):");
+            System.out.println("  Unsorted array constant: " + unsortedConstant);
+            System.out.println("  Sorted array constant: " + sortedConstant);
+            System.out.println("  Reversed array constant: " + reverseSortedConstant);
 
             System.out.println("----------------------------------");
         }
