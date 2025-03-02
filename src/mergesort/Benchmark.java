@@ -8,140 +8,70 @@ import java.util.stream.IntStream;
 public class Benchmark {
     public static void main(String[] args) {
         MergeSort sorter = new MergeSort();
-        
+
         int iterations = 3;
         int[] testN = {10000, 100000, 1000000, 10000000, 50000000};
 
-        ArrayList<Long> sortedTimes = new ArrayList<Long>();
-        ArrayList<Long> unsortedTimes = new ArrayList<Long>();
-        ArrayList<Long> reversedTimes = new ArrayList<Long>();
-
-        for (int i = 0; i < iterations; i++) {
-            for (int n : testN) {
-                int[] testArray = randomArray(n);
-
-                int[] testArraySorted = Arrays.stream(testArray).sorted().toArray();
-                int[] testArraySortedReverse = Arrays.copyOf(testArraySorted, testArraySorted.length);
-                reverseArray(testArraySortedReverse);
-
-                long startSorted = System.currentTimeMillis();
-                sorter.mergeSort(testArraySorted, 0, testArraySorted.length -1);
-                long stopSorted = System.currentTimeMillis();
-                sortedTimes.add(stopSorted - startSorted);
-
-
-                long startUnsorted = System.currentTimeMillis();
-                sorter.mergeSort(testArray, 0, testArray.length -1);
-                long stopUnsorted = System.currentTimeMillis();
-                unsortedTimes.add(stopUnsorted - startUnsorted);
-
-                long startSortedReverse = System.currentTimeMillis();
-                sorter.mergeSort(testArraySortedReverse, 0, testArraySortedReverse.length -1);
-                long stopSortedReverse = System.currentTimeMillis();
-                reversedTimes.add(stopSortedReverse - startSortedReverse);
-            }
-        }
-
-
-        long unsortedSum = 0;
-        long sortedSum = 0;
-        long sortedReversedSum = 0;
-
-        for (Long time : unsortedTimes) {
-            unsortedSum += time;
-        }
-
-        for (Long time : sortedTimes) {
-            sortedSum += time;
-        }
-
-        for (Long time : reversedTimes) {
-            sortedReversedSum += time;
-        }
-
-
-        long unsortedAverage = unsortedSum / unsortedTimes.size();
-        long sortedAverage = sortedSum / sortedTimes.size();
-        long sortedReverseAverage = sortedReversedSum / reversedTimes.size();
-
-
-
-        System.out.println("Array based unsorted average: " + unsortedAverage);
-        System.out.println("Array based Sorted average: " + sortedAverage);
-        System.out.println("Array based Sorted reverse average: " + sortedReverseAverage);
-
+        System.out.println("Array sizes: " + Arrays.toString(testN));
+        System.out.println("Iterations per size: " + iterations);
+        System.out.println("==================================");
 
         for (int n : testN) {
-            double thing = n * log2(n);
+            System.out.println("\nBenchmarking for n = " + n);
 
-            System.out.println();
-            System.out.println("=============");
-            System.out.println("For n = " + n);
+            long unsortedSum = 0;
+            long sortedSum = 0;
+            long reversedSum = 0;
 
             for (int i = 0; i < iterations; i++) {
-                System.out.println("Iteration: " + i);
-                System.out.println("=============");
-                double constantUnsorted = unsortedAverage / thing;
-                double constantSorted =  sortedAverage / thing;
-                double constantSortedReverse =  sortedReverseAverage / thing;
+                int[] testArray = randomArray(n);
+                int[] testArraySorted = Arrays.stream(testArray).sorted().toArray();
+                int[] testArrayReversed = Arrays.copyOf(testArraySorted, testArraySorted.length);
+                reverseArray(testArrayReversed);
 
-                System.out.println("Array based unsorted constant: " + constantUnsorted);
-                System.out.println("Array based Sorted constant: " + constantSorted);
-                System.out.println("Array based Sorted reverse constant: " + constantSortedReverse);
+                long startUnsorted = System.nanoTime();
+                sorter.mergeSort(testArray, 0, testArray.length - 1);
+                long stopUnsorted = System.nanoTime();
+                unsortedSum += (stopUnsorted - startUnsorted);
+
+                long startSorted = System.nanoTime();
+                sorter.mergeSort(testArraySorted, 0, testArraySorted.length - 1);
+                long stopSorted = System.nanoTime();
+                sortedSum += (stopSorted - startSorted);
+
+                long startReversed = System.nanoTime();
+                sorter.mergeSort(testArrayReversed, 0, testArrayReversed.length - 1);
+                long stopReversed = System.nanoTime();
+                reversedSum += (stopReversed - startReversed);
+
+                System.out.print(".");
             }
+            System.out.println();
 
+            double unsortedAvgMs = (unsortedSum / (double)iterations) / 1_000_000.0;
+            double sortedAvgMs = (sortedSum / (double)iterations) / 1_000_000.0;
+            double reversedAvgMs = (reversedSum / (double)iterations) / 1_000_000.0;
+
+            System.out.println("Average times (ms):");
+            System.out.println("  Unsorted array: " + unsortedAvgMs);
+            System.out.println("  Sorted array: " + sortedAvgMs);
+            System.out.println("  Reversed array: " + reversedAvgMs);
+
+            double nLogN = n * log2(n);
+
+            System.out.println("n*log2(n) = " + nLogN);
+            System.out.println("Constants (time in ms divided by n*log2(n)):");
+            System.out.println("  Unsorted array constant: " + (unsortedAvgMs / nLogN));
+            System.out.println("  Sorted array constant: " + (sortedAvgMs / nLogN));
+            System.out.println("  Reversed array constant: " + (reversedAvgMs / nLogN));
+
+            System.out.println("----------------------------------");
         }
-
-        /*ArrayList<Long> sortedTimesArrayList = new ArrayList<Long>();
-        ArrayList<Long> unsortedTimesArrayList = new ArrayList<Long>();
-
-        for (int i = 0; i < iterations; i++) {
-            int[] randomArray = randomArray(arraySize);
-
-            ArrayList<Integer> testArray = new ArrayList<>();
-
-            for (int element : randomArray) {
-                testArray.add(element);
-            }
-
-            ArrayList<Integer> testArraySorted = new ArrayList<>(testArray);
-            testArraySorted.sort(null);
-
-
-            long startSorted = System.currentTimeMillis();
-            MergeSortArrayList.merge_sort(testArraySorted, 0, testArraySorted.size() -1);
-            long stopSorted = System.currentTimeMillis();
-            sortedTimesArrayList.add(stopSorted - startSorted);
-
-
-            long startUnsorted = System.currentTimeMillis();
-            MergeSortArrayList.merge_sort(testArray, 0, testArray.size() -1);
-            long stopUnsorted = System.currentTimeMillis();
-            unsortedTimesArrayList.add(stopUnsorted - startUnsorted);
-
-        }
-
-
-        long unsortedSumArraylist = 0;
-        long sortedSumArraylist = 0;
-
-        for (Long time : unsortedTimesArrayList) {
-            unsortedSumArraylist += time;
-        }
-
-        for (Long time : sortedTimesArrayList) {
-            sortedSumArraylist += time;
-        }
-
-
-        System.out.println("ArrayList based unsorted average: " + unsortedSumArraylist / unsortedTimesArrayList.size());
-        System.out.println("ArrayList based Sorted average: " + sortedSumArraylist / sortedTimesArrayList.size());*/
-
     }
-    
-    
-    public static int[] randomArray(int size ) {
-        return IntStream.generate(() -> new Random().nextInt(size)).limit(size).toArray();
+
+    public static int[] randomArray(int size) {
+        Random random = new Random();
+        return IntStream.generate(() -> random.nextInt(size)).limit(size).toArray();
     }
 
     public static void reverseArray(int[] arr) {
@@ -160,9 +90,7 @@ public class Benchmark {
         }
     }
 
-    public static int log2(int N)
-    {
-
-        return (int)(Math.log(N) / Math.log(2));
+    public static double log2(double N) {
+        return Math.log(N) / Math.log(2);
     }
 }
