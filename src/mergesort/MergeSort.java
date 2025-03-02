@@ -1,3 +1,5 @@
+package mergesort;
+
 public class MergeSort {
 
     public int[] merge(int[] A, int p, int q, int r) {
