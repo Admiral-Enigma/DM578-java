@@ -3,7 +3,9 @@ package quicksort;
 public class QuickSort {
 
     public int partition(int[] array, int p, int r) {
-        selectPivot(array, p, r);
+        if (array.length >= 16) {
+            selectPivot(array, p, r);
+        }
 
         int x = array[r]; // pivot element
         int i = p - 1;    // index of smaller element
