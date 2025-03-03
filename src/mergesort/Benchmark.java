@@ -1,9 +1,11 @@
 package mergesort;
 
-import java.util.ArrayList;
+import common.Common;
+
 import java.util.Arrays;
-import java.util.Random;
-import java.util.stream.IntStream;
+
+import static common.Common.randomArray;
+import static common.Common.reverseArray;
 
 public class Benchmark {
     public static void main(String[] args) {
@@ -57,7 +59,7 @@ public class Benchmark {
             System.out.println("  Sorted array: " + sortedAvgMs);
             System.out.println("  Reversed array: " + reversedAvgMs);
 
-            double nLogN = n * log2(n);
+            double nLogN = n * Common.log2(n);
 
 
             // Maybe wrong to do idk? Makes it easier to compare the constants across different N's
@@ -75,28 +77,4 @@ public class Benchmark {
         }
     }
 
-    public static int[] randomArray(int size) {
-        Random random = new Random();
-        return IntStream.generate(() -> random.nextInt(size)).limit(size).toArray();
-    }
-
-    public static void reverseArray(int[] arr) {
-        int start = 0;
-        int end = arr.length - 1;
-
-        while (start < end) {
-            // Swap elements
-            int temp = arr[start];
-            arr[start] = arr[end];
-            arr[end] = temp;
-
-            // Move indices toward the center
-            start++;
-            end--;
-        }
-    }
-
-    public static double log2(double N) {
-        return Math.log(N) / Math.log(2);
-    }
 }
