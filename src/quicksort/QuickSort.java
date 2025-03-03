@@ -17,12 +17,24 @@ public class QuickSort {
             }
         }
 
+        int pivotNewIndex = i + 1; // Just after the last swapped element in the partition
+
         // Swap array[i+1] and array[r] (put pivot in its correct position)
-        int temp = array[i + 1];
-        array[i + 1] = array[r];
+
+        int temp = array[pivotNewIndex];
+        array[pivotNewIndex] = array[r];
         array[r] = temp;
 
-        return i + 1; // Return the pivot's position
+        return pivotNewIndex; // Return the pivot's position
+    }
+
+
+    public static void quicksort(int[] array, int p, int r) {
+        if (p < r) {
+            int pivotIndex = partition(array, p, r);
+            quicksort(array, p, pivotIndex - 1); // Sort values left of the pivot
+            quicksort(array, pivotIndex +1, r); // Sort values to the right of the pivot
+        }
     }
 
 }
